@@ -1,11 +1,104 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BodyHunter</title>
-</head>
-<body>
-    <h1>Hello World!</h1>
-</body>
-</html>
+{% extends 'bodyapp/base.html' %} {% load static %} {% block linkcss %}
+<link rel="stylesheet" href="{% static 'css/mainshop.css' %}" /> {% endblock %}
+{% block title %} Магазин {% endblock %} {% block content %}
+<main class="shop-space">
+  <section class="search-space">
+    <div class="search-space__container">
+      <div class="search-space__sort-search-space">
+        <div class="search-space__search-block">
+          <form action="/search" method="get">
+            <input
+              placeholder="Введите название продукта..."
+              required=""
+              name="q"
+              class="search-space__input"
+              type="text"
+            />
+            <div class="form-flex">
+              <a href="{% url 'main' %}">Назад</a>
+              <button type="submit">Найти</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="products">
+    <div class="products__container">
+      {% for product in products %}
+      <div class="products__block">
+        <div class="products__img">
+          <img src="{{product.image.url}}" alt="" />
+        </div>
+        <div class="products__info">
+          <p class="products__name">{{product.name}}</p>
+          <div class="products__price-btn">
+            <p class="products__price">Цена : {{product.price}}₽</p>
+            <div
+              data-product="{{product.id}}"
+              data-action="add"
+              class="products__btn updateitem"
+            >
+              в корзину
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  <section class="pagination">
+    <div class="pagination__container">
+      <div class="pagination__blocks">
+        <div class="left-arr">
+          <img src="{% static 'img/svg/Iconl.svg' %}" alt="" />
+        </div>
+        {% if not page_obj.has_other_pages %}
+        <a
+          class="pagination__block pagination__block-selected"
+          href="?page={{page_obj.number}}"
+          >{{page_obj.number}}</a
+        >
+        {% elif page_obj.has_next and page_obj.has_previous %}
+        <a
+          class="pagination__block"
+          href="?page={{page_obj.previous_page_number}}"
+          >{{page_obj.previous_page_number}}</a
+        >
+        <a
+          class="pagination__block pagination__block-selected"
+          href="?page={{page_obj.number}}"
+          >{{page_obj.number}}</a
+        >
+        <a class="pagination__block" href="?page={{page_obj.next_page_number}}"
+          >{{page_obj.next_page_number}}</a
+        >
+        {% elif page_obj.has_next %}
+        <a
+          class="pagination__block pagination__block-selected"
+          href="?page={{page_obj.number}}"
+          >{{page_obj.number}}</a
+        >
+        <a class="pagination__block" href="?page={{page_obj.next_page_number}}"
+          >{{page_obj.next_page_number}}</a
+        >
+        {% elif page_obj.has_previous %}
+        <a
+          class="pagination__block"
+          href="?page={{page_obj.previous_page_number}}"
+          >{{page_obj.previous_page_number}}</a
+        >
+        <a
+          class="pagination__block pagination__block-selected"
+          href="?page={{page_obj.number}}"
+          >{{page_obj.number}}</a
+        >
+        {% endif %}
+        <div class="right-arr">
+          <img src="{% static 'img/svg/Iconr.svg' %}" alt="" />
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+{% endblock %}
